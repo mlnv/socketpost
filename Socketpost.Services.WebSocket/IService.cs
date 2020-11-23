@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 
 namespace Socketpost.Services.WebSocket
 {
     public interface IService
     {
-        public Task Connect(string uri);
-        public Task<bool> Disconnect();
+        void Connect(string uri);
+        void Disconnect();
+        event Action<string> MessageReceived;
+        void Send(string message);
     }
 }

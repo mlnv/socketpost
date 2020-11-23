@@ -1,5 +1,5 @@
-using Socketpost.Services.WebSocket.IntegrationTests.Server;
-using System.Threading.Tasks;
+using Socketpost.Utilities.Server;
+using System.Threading;
 using Xunit;
 
 namespace Socketpost.Services.WebSocket.IntegrationTests
@@ -7,21 +7,32 @@ namespace Socketpost.Services.WebSocket.IntegrationTests
     public class WebSocketServiceTests
     {
         [Fact]
-        public async Task Connect_ServerExists_ConnectHappened()
+        public void Connect_ServerExists_MessageEchoed()
         {
             // Arrange
-            WebSocketServer server = new WebSocketServer();
-            server.StartServer("ws://localhost");
+            EchoWebSocketServer server = new EchoWebSocketServer();
+            server.StartServer("0.0.0.0", 4040);
 
             WebSocketService service = new WebSocketService();
 
+            string messageToSend = "hello";
+            string receivedMessage = string.Empty;
+
+            service.MessageReceived += (message) =>
+            {
+                receivedMessage = message;
+            };
+
             // Act
-            await service.Connect("ws://localhost/sample");
+            service.Connect("ws://localhost:4040");
+            service.Send(messageToSend);
+
+            Thread.Sleep(100);
 
             // Assert
-            // TODO: add check for successful connection
-            Assert.True(true);
+            Assert.Equal(messageToSend, receivedMessage);
 
+            // Clean up
             server.Stop();
         }
     }
