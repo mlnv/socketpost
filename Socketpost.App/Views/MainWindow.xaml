@@ -12,6 +12,37 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel Margin="10">
+      <TextBox Watermark="Address" Text="{Binding Address, Mode=TwoWay}"/>
+      <Button Width="160" Command="{Binding OnConnectCommand}">Connect</Button>
+      
+      <Separator/>
+      
+      <TextBlock Text="Output:" />
+      
+      <TextBox AcceptsReturn="True"
+                TextWrapping="Wrap"
+                Text="{Binding Output, Mode=OneWay}"
+                Focusable="false"
+               Height="100"
+      />
+      
+      <Separator/>
+      <Grid
+        IsVisible="{Binding Service, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <TextBox
+          Watermark="message"
+          Text="{Binding Message, Mode=OneWayToSource}"
+        />
+        <Button
+          Width="160"
+          Command="{Binding OnSendMessageCommand}"
+        >
+          Send
+        </Button>
+      </Grid>
+
+    </StackPanel>
+
 
 </Window>
