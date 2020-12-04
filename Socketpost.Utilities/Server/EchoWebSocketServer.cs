@@ -23,7 +23,7 @@ namespace Socketpost.Utilities.Server
             {
                 configApp.AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "serverOptions:name", "TestServer" },
+                    { "serverOptions:name", "EchoWebSocketServer" },
                     { "serverOptions:listeners:0:ip", address },
                     { "serverOptions:listeners:0:port", port.ToString() }
                 });
