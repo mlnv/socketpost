@@ -12,37 +12,41 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <StackPanel Margin="10">
-      <TextBox Watermark="Address" Text="{Binding Address, Mode=TwoWay}"/>
-      <Button Width="160" Command="{Binding OnConnectCommand}">Connect</Button>
-      
-      <Separator/>
-      
-      <TextBlock Text="Output:" />
-      
-      <TextBox AcceptsReturn="True"
-                TextWrapping="Wrap"
-                Text="{Binding Output, Mode=OneWay}"
-                Focusable="false"
-               Height="100"
-      />
-      
-      <Separator/>
-      <Grid
-        IsVisible="{Binding Service, Converter={x:Static ObjectConverters.IsNotNull}}">
-        <TextBox
-          Watermark="message"
-          Text="{Binding Message, Mode=OneWayToSource}"
-        />
-        <Button
-          Width="160"
-          Command="{Binding OnSendMessageCommand}"
-        >
-          Send
+  <StackPanel Margin="10" Orientation="Vertical">
+    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Horizontal">
+        <TextBox Watermark="Address" Width="200" Text="{Binding Address, Mode=TwoWay}"/>
+        <Button IsVisible="{Binding !IsConnected}" Width="100" Command="{Binding OnConnectCommand}">
+            Connect
         </Button>
-      </Grid>
-
+		<Button IsVisible="{Binding IsConnected}" Width="100" Command="{Binding OnDisconnectCommand}">
+			Disconnect
+		</Button>
     </StackPanel>
+	<StackPanel Orientation="Horizontal">
+		<StackPanel Margin="0,0,10,0" Orientation="Vertical">
+			<TextBlock Margin="0,10,0,0" Text="Output:" />
+			<TextBox Margin="0,10,0,0" MinWidth="400" Height="300" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding Output, Mode=OneWay}" Focusable="false"  />
+		</StackPanel>
 
+		<StackPanel Margin="10,0,0,0" Orientation="Vertical">
+			<TextBlock Margin="0,10,0,0" Text="Message content:" />
+			<TextBox Margin="0,10,0,0" MinWidth="400" Height="300" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding MessageContent, Mode=OneWay}" Focusable="false"  />
+			<Button Width="180" Margin="0,10,0,0" HorizontalAlignment="Right" Command="{Binding OnCopyToMessageForSendingCommand}">
+				Copy to message to send
+			</Button>
+		</StackPanel>
+	</StackPanel>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <StackPanel Orientation="Vertical">
+		  <TextBlock HorizontalAlignment="Left" Width="200" Margin="0,10,0,0" Text="Message to send:"/>
+		  <TextBox Watermark="Message" Width="400" Height="100" Margin="0,10,0,0" Text="{Binding Message, Mode=OneWayToSource}"/>
+      </StackPanel>
+      <Button Width="100" Height="25" Margin="10,0,0,0" VerticalAlignment="Bottom" Command="{Binding OnSendMessageCommand}">
+        Send
+      </Button>
+    </StackPanel>
+  </StackPanel>
 
 </Window>
