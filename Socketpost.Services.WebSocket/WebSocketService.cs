@@ -7,6 +7,8 @@ namespace Socketpost.Services.WebSocket
         private WebSocketSharp.WebSocket client;
 
         public event Action<string> MessageReceived;
+        public event Action OnConnected;
+        public event Action OnDisconnected;
 
         public void Connect(string uri)
         {
@@ -19,17 +21,16 @@ namespace Socketpost.Services.WebSocket
 
             client.OnClose += (sender, e) =>
             {
-
+                OnDisconnected?.Invoke();
             };
 
             client.OnOpen += (sender, e) =>
             {
-
+                OnConnected?.Invoke();
             };
 
             client.OnError += (sender, e) =>
             {
-
             };
 
             client.Connect();
