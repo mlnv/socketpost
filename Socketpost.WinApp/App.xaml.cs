@@ -25,7 +25,7 @@ namespace Socketpost.WinApp
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IService, WebSocketService>();
+            containerRegistry.RegisterSingleton<IWebSocketService, WebSocketService>();
         }
     }
 }

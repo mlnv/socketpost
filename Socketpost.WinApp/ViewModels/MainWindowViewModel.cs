@@ -10,41 +10,75 @@ namespace Socketpost.WinApp.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
+        /// <summary>
+        /// The address to connect to.
+        /// </summary>
         public string Address { get; set; } = "ws://localhost:4040";
 
+        /// <summary>
+        /// The messages from a connection between the client and a server.
+        /// </summary>
         public ObservableCollection<Message> OutputMessages { get; set; } = new ObservableCollection<Message>();
 
+        /// <summary>
+        /// The selected message content.
+        /// </summary>
         public string MessageContent
         {
             get => messageContent;
             set => SetProperty(ref messageContent, value);
         }
 
+        /// <summary>
+        /// Indicates whether or not the client is connected.
+        /// </summary>
         public bool IsConnected
         {
             get => isConnected;
             set => SetProperty(ref isConnected, value);
         }
 
+        /// <summary>
+        /// The message to send to the server.
+        /// </summary>
         public string MessageToSend
         {
             get => messageToSend;
             set => SetProperty(ref messageToSend, value);
         }
 
-        private readonly IService service;
+        private readonly IWebSocketService service;
 
         private string messageToSend;
         private string messageContent;
         private bool isConnected;
 
+        /// <summary>
+        /// Connect a client to a server command.
+        /// </summary>
         public DelegateCommand ConnectCommand { get; private set; }
+
+        /// <summary>
+        /// Disconnect existing connection command.
+        /// </summary>
         public DelegateCommand DisconnectCommand { get; private set; }
+
+        /// <summary>
+        /// Send message in existing connection command.
+        /// </summary>
         public DelegateCommand SendMessageCommand { get; private set; }
+
+        /// <summary>
+        /// Copy selected message to send message holder.
+        /// </summary>
         public DelegateCommand CopyToMessageForSendingCommand { get; private set; }
+
+        /// <summary>
+        /// Updated on every change of selected message.
+        /// </summary>
         public DelegateCommand<object> SelectionChangedCommand { get; private set; }
 
-        public MainWindowViewModel(IService service)
+        public MainWindowViewModel(IWebSocketService service)
         {
             ConnectCommand = new DelegateCommand(Connect, () => !IsConnected).ObservesProperty(() => IsConnected);
             DisconnectCommand = new DelegateCommand(Disconnect, () => IsConnected).ObservesProperty(() => IsConnected);
@@ -61,7 +95,7 @@ namespace Socketpost.WinApp.ViewModels
             this.service = service;
         }
 
-        public void Connect()
+        private void Connect()
         {
             if (string.IsNullOrEmpty(Address))
             {
@@ -83,7 +117,7 @@ namespace Socketpost.WinApp.ViewModels
             service.Connect(Address);
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             service.Disconnect();
             UnsubscribeFromEvents();
@@ -95,7 +129,7 @@ namespace Socketpost.WinApp.ViewModels
             });
         }
 
-        public void SendMessage()
+        private void SendMessage()
         {
             OutputMessages.Add(new Message()
             {
@@ -104,7 +138,7 @@ namespace Socketpost.WinApp.ViewModels
             service.Send(MessageToSend);
         }
 
-        public void CopyToMessageForSending()
+        private void CopyToMessageForSending()
         {
             MessageToSend = MessageContent;
         }

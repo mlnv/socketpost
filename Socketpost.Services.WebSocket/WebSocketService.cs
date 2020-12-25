@@ -2,14 +2,24 @@
 
 namespace Socketpost.Services.WebSocket
 {
-    public class WebSocketService : IService
+    /// <inheritdoc/>
+    public class WebSocketService : IWebSocketService
     {
-        private WebSocketSharp.WebSocket client;
-
+        /// <inheritdoc/>
         public event Action<string> MessageReceived;
+
+        /// <inheritdoc/>
         public event Action OnConnected;
+
+        /// <inheritdoc/>
         public event Action OnDisconnected;
 
+        /// <inheritdoc/>
+        public event Action<string> OnError;
+
+        private WebSocketSharp.WebSocket client;
+
+        /// <inheritdoc/>
         public void Connect(string uri)
         {
             client = new WebSocketSharp.WebSocket(uri);
@@ -31,11 +41,13 @@ namespace Socketpost.Services.WebSocket
 
             client.OnError += (sender, e) =>
             {
+                OnError?.Invoke(e.Message);
             };
 
             client.Connect();
         }
 
+        /// <inheritdoc/>
         public void Disconnect()
         {
             if (client == null || !client.IsAlive)
@@ -47,6 +59,7 @@ namespace Socketpost.Services.WebSocket
             client?.Close();
         }
 
+        /// <inheritdoc/>
         public void Send(string message)
         {
             client?.Send(message);
