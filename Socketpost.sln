@@ -18,7 +18,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socketpost.ConsoleWebSocket
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socketpost.Utilities", "Socketpost.Utilities\Socketpost.Utilities.csproj", "{5CBC9965-AF2F-4FDB-8430-15493B34716E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socketpost.WinApp", "Socketpost.WinApp\Socketpost.WinApp.csproj", "{5DF18F9B-0A4A-4FA6-B6A2-D0C59AB90C3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Socketpost.WinApp", "Socketpost.WinApp\Socketpost.WinApp.csproj", "{5DF18F9B-0A4A-4FA6-B6A2-D0C59AB90C3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socketpost.WinApp.Tests", "Socketpost.WinApp.Tests\Socketpost.WinApp.Tests.csproj", "{A9CEA3BD-3A01-444E-99C4-799E1476F2B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{5DF18F9B-0A4A-4FA6-B6A2-D0C59AB90C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DF18F9B-0A4A-4FA6-B6A2-D0C59AB90C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DF18F9B-0A4A-4FA6-B6A2-D0C59AB90C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9CEA3BD-3A01-444E-99C4-799E1476F2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9CEA3BD-3A01-444E-99C4-799E1476F2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9CEA3BD-3A01-444E-99C4-799E1476F2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9CEA3BD-3A01-444E-99C4-799E1476F2B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

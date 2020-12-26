@@ -1,13 +1,9 @@
 ﻿using Prism.DryIoc;
 using Prism.Ioc;
 using Socketpost.Services.WebSocket;
+using Socketpost.Utilities;
+using Socketpost.WinApp.Utilities;
 using Socketpost.WinApp.Views;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Socketpost.WinApp
@@ -25,6 +21,7 @@ namespace Socketpost.WinApp
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IDispatcher, ApplicationDispatcher>();
             containerRegistry.RegisterSingleton<IWebSocketService, WebSocketService>();
         }
     }
