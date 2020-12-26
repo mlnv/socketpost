@@ -186,7 +186,7 @@ namespace Socketpost.WinApp.ViewModels
                 OutputMessages.Add(new Message()
                 {
                     FromServer = true,
-                    Data = MessageToSend
+                    Data = message
                 });
             }));
         }
