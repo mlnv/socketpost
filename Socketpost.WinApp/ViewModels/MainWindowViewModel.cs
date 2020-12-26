@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using Prism.Commands;
 using System;
 using System.Windows;
+using Socketpost.Utilities;
 
 namespace Socketpost.WinApp.ViewModels
 {
@@ -48,7 +49,7 @@ namespace Socketpost.WinApp.ViewModels
         }
 
         private readonly IWebSocketService service;
-
+        private readonly IDispatcher dispatcher;
         private string messageToSend;
         private string messageContent;
         private bool isConnected;
@@ -78,7 +79,7 @@ namespace Socketpost.WinApp.ViewModels
         /// </summary>
         public DelegateCommand<object> SelectionChangedCommand { get; private set; }
 
-        public MainWindowViewModel(IWebSocketService service)
+        public MainWindowViewModel(IDispatcher dispatcher, IWebSocketService service)
         {
             ConnectCommand = new DelegateCommand(Connect, () => !IsConnected).ObservesProperty(() => IsConnected);
             DisconnectCommand = new DelegateCommand(Disconnect, () => IsConnected).ObservesProperty(() => IsConnected);
@@ -93,6 +94,7 @@ namespace Socketpost.WinApp.ViewModels
             SelectionChangedCommand = new DelegateCommand<object>(SelectionChanged);
 
             this.service = service;
+            this.dispatcher = dispatcher;
         }
 
         private void Connect()
@@ -179,7 +181,7 @@ namespace Socketpost.WinApp.ViewModels
 
         private void MessageReceived(string message)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => 
+            dispatcher.Dispatch(new Action(() => 
             {
                 OutputMessages.Add(new Message()
                 {
