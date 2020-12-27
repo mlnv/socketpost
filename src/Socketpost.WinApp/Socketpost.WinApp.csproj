@@ -4,6 +4,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Authors>Maksym Yemelianov</Authors>
+    <Product>socketpost</Product>
+    <PackageId>socketpost</PackageId>
+    <Company />
+    <Copyright>Maksym Yemelianov</Copyright>
+    <Description>A WebSocket client.</Description>
   </PropertyGroup>
 
   <ItemGroup>
