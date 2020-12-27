@@ -64,7 +64,8 @@ namespace Socketpost.WinApp.Tests.ViewModels
             viewModel.ConnectCommand.Execute();
 
             // Assert
-            Assert.True(viewModel.IsConnected);
+            Assert.True(false);
+            //Assert.True(viewModel.IsConnected);
         }
 
         [Fact]
