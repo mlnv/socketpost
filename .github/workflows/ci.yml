@@ -12,6 +12,7 @@ jobs:
     
     env:
       Solution_Path: src/Socketpost.sln
+      Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands for Nerdbank.GitVersioning to set version variables
       
     strategy:
       matrix:
