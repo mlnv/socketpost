@@ -43,7 +43,7 @@ jobs:
         env:
           Configuration: Debug
           TargetPlatform: win-${{ matrix.targetplatform }}
-          BuildOutputPath: build/$env:TargetPlatform/
+          BuildOutputPath: build/${{ $env:TargetPlatform }}/
 
       # Upload the application package: https://github.com/marketplace/actions/upload-artifact
       - name: Upload build artifacts
