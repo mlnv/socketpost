@@ -51,5 +51,5 @@ jobs:
         env:
           Name: SocketPost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}-beta.${{ env.NBGV_VersionRevision }}
         with:
-          name: $env:Name
-          path: $env:BuildOutputPath
+          name: ${{ env.Name }}
+          path: ${{ env.BuildOutputPath }}
