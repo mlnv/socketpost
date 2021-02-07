@@ -1,47 +1,44 @@
-name: Main CI workflow
+name: CI develop workflow
 
 on:
   pull_request:
   push:
     branches:
       - develop
-      
+
 jobs:
   build:
     runs-on: windows-latest
-    
+
     env:
       Solution_Path: src/Socketpost.sln
       Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands for Nerdbank.GitVersioning to set version variables
-      
+
     strategy:
       matrix:
         targetplatform: [x86, x64]
-      
+
     steps:
-    
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
-        
-    # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
-    - name: Use Nerdbank.GitVersioning to set version variables
-      uses: aarnott/nbgv@v0.3
-      with:
-        setAllVars: true
-    
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.x'
-    
-    # Publish the Windows Application
-    - name: Build the Windows Application
-      run: dotnet publish $env:Solution_Path -c $env:Configuration -p:PublishSingleFile=true -r $env:TargetPlatform --self-contained
-      env:
-        Configuration: Debug
-        TargetPlatform: win-${{ matrix.targetplatform }}
-        
-    
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+      # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
+      - name: Use Nerdbank.GitVersioning to set version variables
+        uses: aarnott/nbgv@v0.3
+        with:
+          setAllVars: true
+
+      # Install the .NET Core workload
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "3.1.x"
+
+      # Publish the Windows Application
+      - name: Build the Windows Application
+        run: dotnet publish $env:Solution_Path -c $env:Configuration -p:PublishSingleFile=true -r $env:TargetPlatform --self-contained
+        env:
+          Configuration: Debug
+          TargetPlatform: win-${{ matrix.targetplatform }}
