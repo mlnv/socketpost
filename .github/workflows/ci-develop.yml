@@ -43,11 +43,13 @@ jobs:
         env:
           Configuration: Debug
           TargetPlatform: win-${{ matrix.targetplatform }}
-          BuildOutputPath: build/win-${{ matrix.targetplatform }}/
+          BuildOutputPath: build/$env:TargetPlatform/
 
       # Upload the application package: https://github.com/marketplace/actions/upload-artifact
       - name: Upload build artifacts
         uses: actions/upload-artifact@v1
+        env:
+          Name: SocketPost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}-beta.${{ env.NBGV_VersionRevision }}
         with:
-          name: SocketPost-win-${{ matrix.targetplatform }}-$env:NBGV_SimpleVersion-beta.$env:NBGV_VersionRevision
+          name: $env:Name
           path: $env:BuildOutputPath
