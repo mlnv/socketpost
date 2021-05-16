@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:viewModels="clr-namespace:Socketpost.WinApp.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="574" Width="845">
+        Title="MainWindow" Height="574" Width="845" d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
     <Grid>
         <StackPanel Margin="10" Orientation="Vertical">
             <StackPanel Orientation="Vertical">
