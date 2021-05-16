@@ -8,10 +8,6 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Socketpost.DesktopApp">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
     <Grid>
       <StackPanel Margin="10" Orientation="Vertical">
         <StackPanel Orientation="Vertical">
