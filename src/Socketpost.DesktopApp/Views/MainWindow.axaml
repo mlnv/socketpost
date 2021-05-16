@@ -22,7 +22,6 @@
           </StackPanel>
           <StackPanel Orientation="Horizontal">
             <StackPanel Margin="0,0,10,0" Orientation="Vertical">
-              <TextBlock Margin="0,10,0,0" Text="Output:" />
               <ListBox Items="{Binding OutputMessages}" Margin="0,10,0,0" MinWidth="400" Height="300">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
@@ -38,15 +37,13 @@
             </StackPanel>
 
             <StackPanel Margin="10,0,0,0" Orientation="Vertical">
-              <TextBlock Margin="0,10,0,0" Text="Message content:" />
-              <TextBox Margin="0,10,0,0" MinWidth="400" Height="300" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding MessageContent, Mode=OneWay}" Focusable="false"  />
+              <TextBox Watermark="Message content" Margin="0,10,0,0" MinWidth="400" Height="300" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding MessageContent, Mode=OneWay}" Focusable="false"  />
             </StackPanel>
           </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
           <StackPanel Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Left" Width="200" Margin="0,10,0,0" Text="Message to send:"/>
-            <TextBox Width="400" Height="100" Margin="0,10,0,0" Text="{Binding MessageToSend, Mode=TwoWay}"/>
+            <TextBox Width="400" Height="100" Margin="0,10,0,0" Text="{Binding MessageToSend, Mode=TwoWay}" Watermark="Message to send"/>
           </StackPanel>
           <Button Width="100" Margin="10,0,0,0" VerticalAlignment="Bottom" Command="{Binding SendMessageCommand}">
             Send
