@@ -71,11 +71,6 @@ namespace Socketpost.DesktopApp.ViewModels
         public ReactiveCommand<Unit, Unit> SendMessageCommand { get; private set; }
 
         /// <summary>
-        /// Copy selected message to send message holder.
-        /// </summary>
-        public ReactiveCommand<Unit, Unit> CopyToMessageForSendingCommand { get; private set; }
-
-        /// <summary>
         /// Updated on every change of selected message.
         /// </summary>
         public ReactiveCommand<object, Unit> SelectionChangedCommand { get; private set; }
@@ -89,10 +84,6 @@ namespace Socketpost.DesktopApp.ViewModels
             DisconnectCommand = ReactiveCommand
                 .Create(Disconnect,
                 canExecute: this.WhenAnyValue(x => x.IsConnected, (isConnected) => isConnected == true));
-
-            CopyToMessageForSendingCommand = ReactiveCommand
-                .Create(CopyToMessageForSending,
-                canExecute: this.WhenAnyValue(x => x.MessageContent, (content) => !string.IsNullOrEmpty(content)));
 
             SendMessageCommand = ReactiveCommand
                 .Create(SendMessage,
@@ -147,11 +138,6 @@ namespace Socketpost.DesktopApp.ViewModels
                 Data = MessageToSend
             });
             service.Send(MessageToSend);
-        }
-
-        private void CopyToMessageForSending()
-        {
-            MessageToSend = MessageContent;
         }
 
         private void SubscribeOnEvents()
