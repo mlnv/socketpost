@@ -1,9 +1,11 @@
+using Avalonia.Controls.Selection;
 using ReactiveUI;
 using Socketpost.DesktopApp.Models;
 using Socketpost.Services.WebSocket;
 using Socketpost.Utilities;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 
 namespace Socketpost.DesktopApp.ViewModels
@@ -47,6 +49,8 @@ namespace Socketpost.DesktopApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref messageToSend, value);
         }
 
+        public SelectionModel<Message> OutputMessagesSelection { get; }
+
         private readonly IWebSocketService service;
         private readonly IDispatcher dispatcher;
         private string messageToSend;
@@ -68,11 +72,6 @@ namespace Socketpost.DesktopApp.ViewModels
         /// </summary>
         public ReactiveCommand<Unit, Unit> SendMessageCommand { get; private set; }
 
-        /// <summary>
-        /// Updated on every change of selected message.
-        /// </summary>
-        public ReactiveCommand<object, Unit> SelectionChangedCommand { get; private set; }
-
         public MainWindowViewModel(IDispatcher dispatcher, IWebSocketService service)
         {
             ConnectCommand = ReactiveCommand
@@ -88,11 +87,23 @@ namespace Socketpost.DesktopApp.ViewModels
                 canExecute: this.WhenAnyValue(x => x.IsConnected, y => y.MessageToSend,
                     (connected, messageToSend) => connected && !string.IsNullOrEmpty(messageToSend)));
 
-            // TODO: Implement showing message content
-            //SelectionChangedCommand = ReactiveCommand.Create(SelectionChanged);
-
             this.service = service;
             this.dispatcher = dispatcher;
+
+            OutputMessagesSelection = new SelectionModel<Message>();
+            OutputMessagesSelection.SelectionChanged += OutputMessagesSelectionChanged;
+        }
+
+        private void OutputMessagesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<Message> e)
+        {
+            var selectedMessage = e.SelectedItems.FirstOrDefault();
+
+            if (selectedMessage == null)
+            {
+                return;
+            }
+
+            MessageContent = selectedMessage.Data;
         }
 
         private void Connect()
