@@ -17,4 +17,7 @@
     <ProjectReference Include="..\Socketpost.Services.WebSocket\Socketpost.Services.WebSocket.csproj" />
     <ProjectReference Include="..\Socketpost.Utilities\Socketpost.Utilities.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.4.194" />
+  </ItemGroup>
 </Project>
