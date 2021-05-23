@@ -10,8 +10,6 @@ namespace Socketpost.DesktopApp.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting => "Welcome to Avalonia!";
-
         /// <summary>
         /// The address to connect to.
         /// </summary>
