@@ -112,7 +112,7 @@ namespace Socketpost.DesktopApp.ViewModels
             {
                 OutputMessages.Add(new Message()
                 {
-                    Informational = true,
+                    Type = MessageType.Informational,
                     Data = "Address is empty."
                 });
                 return;
@@ -122,7 +122,7 @@ namespace Socketpost.DesktopApp.ViewModels
 
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Connecting to {Address}."
             });
             service.Connect(Address);
@@ -135,7 +135,7 @@ namespace Socketpost.DesktopApp.ViewModels
 
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Disconnected from {Address}."
             });
         }
@@ -144,6 +144,7 @@ namespace Socketpost.DesktopApp.ViewModels
         {
             OutputMessages.Add(new Message()
             {
+                Type = MessageType.Sent,
                 Data = MessageToSend
             });
             service.Send(MessageToSend);
@@ -168,7 +169,7 @@ namespace Socketpost.DesktopApp.ViewModels
             IsConnected = false;
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Disconnected from {Address}."
             });
         }
@@ -178,7 +179,7 @@ namespace Socketpost.DesktopApp.ViewModels
             IsConnected = true;
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Connected to {Address}."
             });
         }
@@ -189,7 +190,7 @@ namespace Socketpost.DesktopApp.ViewModels
             {
                 OutputMessages.Add(new Message()
                 {
-                    FromServer = true,
+                    Type = MessageType.Received,
                     Data = message
                 });
             }));

@@ -31,7 +31,7 @@
                 <ListBox.ItemTemplate>
                   <DataTemplate>
                     <StackPanel>
-                      <TextBlock Text="{Binding FromServer, StringFormat='Is from server: {0}'}"/>
+                      <TextBlock Text="{Binding Type}"/>
                       <Border CornerRadius="4" Padding="4">
                         <TextBlock Text="{Binding Data, StringFormat='Data: {0}'}"/>
                       </Border>
