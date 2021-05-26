@@ -51,7 +51,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v1
         env:
-          Name: Socketpost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}-beta.${{ env.NBGV_VersionRevision }}
+          Name: Socketpost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}.${{ env.VersionHeight }}-beta
         with:
           name: ${{ env.Name }}
           path: build/win-${{ matrix.targetplatform }}/
