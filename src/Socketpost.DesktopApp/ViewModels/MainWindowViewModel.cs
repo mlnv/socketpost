@@ -1,15 +1,16 @@
-﻿using Socketpost.WinApp.Models;
+using Avalonia.Controls.Selection;
+using ReactiveUI;
+using Socketpost.DesktopApp.Models;
 using Socketpost.Services.WebSocket;
-using System.Collections.ObjectModel;
-using Prism.Mvvm;
-using Prism.Commands;
-using System;
-using System.Windows;
 using Socketpost.Utilities;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
 
-namespace Socketpost.WinApp.ViewModels
+namespace Socketpost.DesktopApp.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : ViewModelBase
     {
         /// <summary>
         /// The address to connect to.
@@ -27,7 +28,7 @@ namespace Socketpost.WinApp.ViewModels
         public string MessageContent
         {
             get => messageContent;
-            set => SetProperty(ref messageContent, value);
+            set => this.RaiseAndSetIfChanged(ref messageContent, value);
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Socketpost.WinApp.ViewModels
         public bool IsConnected
         {
             get => isConnected;
-            set => SetProperty(ref isConnected, value);
+            set => this.RaiseAndSetIfChanged(ref isConnected, value);
         }
 
         /// <summary>
@@ -45,8 +46,10 @@ namespace Socketpost.WinApp.ViewModels
         public string MessageToSend
         {
             get => messageToSend;
-            set => SetProperty(ref messageToSend, value);
+            set => this.RaiseAndSetIfChanged(ref messageToSend, value);
         }
+
+        public SelectionModel<Message> OutputMessagesSelection { get; }
 
         private readonly IWebSocketService service;
         private readonly IDispatcher dispatcher;
@@ -57,53 +60,59 @@ namespace Socketpost.WinApp.ViewModels
         /// <summary>
         /// Connect a client to a server command.
         /// </summary>
-        public DelegateCommand ConnectCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> ConnectCommand { get; }
 
         /// <summary>
         /// Disconnect existing connection command.
         /// </summary>
-        public DelegateCommand DisconnectCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> DisconnectCommand { get; private set; }
 
         /// <summary>
         /// Send message in existing connection command.
         /// </summary>
-        public DelegateCommand SendMessageCommand { get; private set; }
-
-        /// <summary>
-        /// Copy selected message to send message holder.
-        /// </summary>
-        public DelegateCommand CopyToMessageForSendingCommand { get; private set; }
-
-        /// <summary>
-        /// Updated on every change of selected message.
-        /// </summary>
-        public DelegateCommand<object> SelectionChangedCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> SendMessageCommand { get; private set; }
 
         public MainWindowViewModel(IDispatcher dispatcher, IWebSocketService service)
         {
-            ConnectCommand = new DelegateCommand(Connect, () => !IsConnected).ObservesProperty(() => IsConnected);
-            DisconnectCommand = new DelegateCommand(Disconnect, () => IsConnected).ObservesProperty(() => IsConnected);
+            ConnectCommand = ReactiveCommand
+                .Create(Connect,
+                canExecute: this.WhenAnyValue(x => x.IsConnected, (isConnected) => !isConnected));
 
-            CopyToMessageForSendingCommand = new DelegateCommand(CopyToMessageForSending, () => !string.IsNullOrEmpty(MessageContent))
-                .ObservesProperty(() => MessageContent);
+            DisconnectCommand = ReactiveCommand
+                .Create(Disconnect,
+                canExecute: this.WhenAnyValue(x => x.IsConnected, (isConnected) => isConnected == true));
 
-            SendMessageCommand = new DelegateCommand(SendMessage, () => IsConnected && !string.IsNullOrEmpty(MessageToSend))
-                .ObservesProperty(() => IsConnected)
-                .ObservesProperty(() => MessageToSend);
-
-            SelectionChangedCommand = new DelegateCommand<object>(SelectionChanged);
+            SendMessageCommand = ReactiveCommand
+                .Create(SendMessage,
+                canExecute: this.WhenAnyValue(x => x.IsConnected, y => y.MessageToSend,
+                    (connected, messageToSend) => connected && !string.IsNullOrEmpty(messageToSend)));
 
             this.service = service;
             this.dispatcher = dispatcher;
+
+            OutputMessagesSelection = new SelectionModel<Message>();
+            OutputMessagesSelection.SelectionChanged += OutputMessagesSelectionChanged;
+        }
+
+        private void OutputMessagesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<Message> e)
+        {
+            var selectedMessage = e.SelectedItems.FirstOrDefault();
+
+            if (selectedMessage == null)
+            {
+                return;
+            }
+
+            MessageContent = selectedMessage.Data;
         }
 
         private void Connect()
         {
             if (string.IsNullOrEmpty(Address))
             {
-                OutputMessages.Add(new Message() 
+                OutputMessages.Add(new Message()
                 {
-                    Informational = true,
+                    Type = MessageType.Informational,
                     Data = "Address is empty."
                 });
                 return;
@@ -113,7 +122,7 @@ namespace Socketpost.WinApp.ViewModels
 
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Connecting to {Address}."
             });
             service.Connect(Address);
@@ -126,7 +135,7 @@ namespace Socketpost.WinApp.ViewModels
 
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Disconnected from {Address}."
             });
         }
@@ -135,14 +144,10 @@ namespace Socketpost.WinApp.ViewModels
         {
             OutputMessages.Add(new Message()
             {
+                Type = MessageType.Sent,
                 Data = MessageToSend
             });
             service.Send(MessageToSend);
-        }
-
-        private void CopyToMessageForSending()
-        {
-            MessageToSend = MessageContent;
         }
 
         private void SubscribeOnEvents()
@@ -164,7 +169,7 @@ namespace Socketpost.WinApp.ViewModels
             IsConnected = false;
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Disconnected from {Address}."
             });
         }
@@ -174,18 +179,18 @@ namespace Socketpost.WinApp.ViewModels
             IsConnected = true;
             OutputMessages.Add(new Message()
             {
-                Informational = true,
+                Type = MessageType.Informational,
                 Data = $"Connected to {Address}."
             });
         }
 
         private void MessageReceived(string message)
         {
-            dispatcher.Dispatch(new Action(() => 
+            dispatcher.Dispatch(new Action(() =>
             {
                 OutputMessages.Add(new Message()
                 {
-                    FromServer = true,
+                    Type = MessageType.Received,
                     Data = message
                 });
             }));

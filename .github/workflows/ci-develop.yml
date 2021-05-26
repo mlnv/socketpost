@@ -12,7 +12,7 @@ jobs:
 
     env:
       Solution_Path: src/Socketpost.sln
-      WinApp_Project_Path: src/Socketpost.WinApp/Socketpost.WinApp.csproj
+      WinApp_Project_Path: src/Socketpost.DesktopApp/Socketpost.DesktopApp.csproj
       Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands for Nerdbank.GitVersioning to set version variables
 
     strategy:
@@ -30,13 +30,13 @@ jobs:
         uses: aarnott/nbgv@v0.3
         with:
           setAllVars: true
-          path: src/Socketpost.WinApp/
+          path: src/Socketpost.DesktopApp/
 
       # Install the .NET Core workload
       - name: Install .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "3.1.x"
+          dotnet-version: "5.0.x"
 
       # Publish the Windows Application
       - name: Build the Windows Application
@@ -50,7 +50,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v1
         env:
-          Name: SocketPost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}-beta.${{ env.NBGV_VersionRevision }}
+          Name: Socketpost-win-${{ matrix.targetplatform }}-${{ env.NBGV_SimpleVersion }}.${{ env.NBGV_VersionHeight }}-beta
         with:
           name: ${{ env.Name }}
           path: build/win-${{ matrix.targetplatform }}/
